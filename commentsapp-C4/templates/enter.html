@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+
+{% block the_body %}
+
+<form action="{{ the_save_url }}" method="POST">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <p>
+    Please tell me your name: 
+    <input type="TEXT" name="user_name">
+    </p>
+
+    <textarea rows="10" cols="60" name="the_comment"></textarea>
+    <p>
+    <input type="SUBMIT" value="Leave a comment">
+    </p>
+
+</form>
+
+{% endblock %}
