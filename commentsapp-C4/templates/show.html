@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block the_body %}
+
+{% for line in the_data %}
+
+<p>
+{{ line }}
+</p>
+
+{% endfor %}
+
+Go <a href={{home_link}}>Home</a>
+
+{% endblock %}

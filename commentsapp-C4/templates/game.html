@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block the_body %}
+
+
+
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+<form action="{{ game_save_url }}" method="POST">
+    <textarea readonly name="sourceWord" value = {{ the_word }}  >
+    Your word is: {{ the_word }}
+    </textarea><br>
+
+    Word 1: <textarea rows="1" cols="30" name="word1"></textarea><br>
+    Word 2: <textarea rows="1" cols="30" name="word2"></textarea><br>
+    Word 3: <textarea rows="1" cols="30" name="word3"></textarea><br>
+    Word 4: <textarea rows="1" cols="30" name="word4"></textarea><br>
+    Word 5: <textarea rows="1" cols="30" name="word5"></textarea><br>
+    Word 6: <textarea rows="1" cols="30" name="word6"></textarea><br>
+    Word 7: <textarea rows="1" cols="30" name="word7"></textarea><br>
+
+    <p>
+    <input type="SUBMIT" value="Submit">
+    </p>
+
+
+{% endblock %}
