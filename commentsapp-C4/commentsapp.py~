@@ -81,7 +81,7 @@ def checkWords(sourceWord,words):
 		if len(usrin) != 0:
 			count = len(usrin)
 			print(count)
-			if usrin + '\n' in shortWord:
+			if usrin in shortWord:
 				print("I'm in shortWord")
 				for i in usrin:
 					print("I am your i!" + i)
