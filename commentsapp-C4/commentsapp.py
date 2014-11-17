@@ -1,7 +1,6 @@
 
 from flask import Flask, render_template, url_for, request, redirect, flash, session
-
-import time,random,os
+import time,random,os,datetime
 from threading import Thread
 
 app = Flask(__name__)
@@ -56,17 +55,25 @@ def showallcomments():
 				the_data=lines,							home_link=url_for("display_home"))
 
 @app.route('/wordgame')
+
 def wordgame():
-	return render_template("game.html",
-			 the_title="Please make words from the word 	given!",			 the_word=get_random_line(),
-				 game_save_url=url_for("savegamedata") )
+    session['startTime'] = getTimeStamp()
+    session['randomWord'] = get_random_line()
+    return render_template("game.html",
+            the_title="Please make words from the word 	given!",
+            the_word=session['randomWord'],
+            game_save_url=url_for("savegamedata") )
+def getTimeStamp():
+        return datetime.datetime.utcnow()
 def get_random_line():
-	total_bytes = os.stat('longWords.txt').st_size
-	random_point = random.randint(0, total_bytes)
-	file = open('longWords.txt')
-	file.seek(random_point)
-	file.readline() # skip this line to clear the partial line
-	return file.readline()#variables
+    total_bytes = os.stat('longWords.txt').st_size
+    random_point = random.randint(0, total_bytes)
+    print(str(random_point))
+    file = open('longWords.txt')
+    file.seek(random_point)
+    file.readline() # skip this line to clear the partial line
+    return file.readline()#variables
+
 def isAWord(word):
     return '\n' + word + '\n' in open("shortWords.txt").read()
 def hasTooManyLetters(word,source,i):
@@ -83,31 +90,35 @@ def isInSource(word,source):
         return True
     else:
         return False
-def checkWords(sourceWord,words):
+def checkWords(words):
         correctWords = []
+        sourceWord = session['randomWord']
         for usrin in words:
             if len(usrin) != 0:
                 if isAWord(usrin) and usrin != sourceWord:
-                    if isInSource():
+                    if isInSource(usrin,sourceWord):
                         correctWords.append(True)
                     else:
                         correctWords.append(False)
+                else:
+                    correctWords.append(False)
+            else:
+                correctWords.append(False)
         return correctWords
 
 @app.route('/gameresults', methods=["POST"])
-def savegamedata():
 
-	words = [request.form['word1'],request.form['word2'],request.form['word3'],request.form['word4'],request.form['word5'],request.form['word6'],request.form['word7']]
-	print('-' *60)
-	print(words)
-	print(request.form["sourceWord"])
-	print('-' *60)
-	#t = Thread(target=update_log, args=(request.form['user_name'], request.form	['the_comment']))
-	#t.start()
-	#if checkWords(request.form("sourceWord"),words):
-	correctWords = checkWords(request.form['sourceWord'],words)
-	if len(correctWords) > 1:
-		return render_template("gameresult.html",
+def savegamedata():
+    session['endTime'] = getTimeStamp()
+    totalTime = timeDifference()
+    formattedTime = nice_timedelta_str(totalTime)
+    words = [request.form['word1'],request.form['word2'],request.form['word3'],request.form['word4']
+        ,request.form['word5'],request.form['word6'],request.form['word7']]
+
+
+    correctWords = checkWords(words)
+    if len(correctWords) > 1:
+        return render_template("gameresult.html",
 						 word1=request.form["word1"],
 						 word2=request.form["word2"],
 						 word3=request.form["word3"],
@@ -116,13 +127,22 @@ def savegamedata():
 						 word6=request.form["word6"],
 						 word7=request.form["word7"],
                          correctWords = correctWords,
-						 home_link=url_for("display_home"), )
-	else:
-		return redirect(url_for("getacomment"))
+						 home_link=url_for("display_home"),
+                         game_link=url_for("wordgame"),
+                         game_time= formattedTime)
+    else:
+        return redirect(url_for("getacomment"))
 
+def timeDifference():
+    return session['endTime'] - session['startTime']
 
+def nice_timedelta_str(d):
+    result = str(d)
+    if result[1] == ':':
+        result = '0' + result
+    return result
 
 
 app.config['SECRET_KEY'] = 'thisismysecretkeywhichyouwillneverguesshahahahahahahaha'
 if __name__== "__main__":
-	app.run(debug=True)
+    app.run(debug=True)

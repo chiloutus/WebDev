@@ -16,10 +16,7 @@
     {% endwith %}
 
 <form action="{{ game_save_url }}" method="POST">
-    Your word is:
-    <textarea readonly name="sourceWord" rows="1" cols="15" value = {{ the_word }}  >
-    {{ the_word }}
-    </textarea><br>
+    Your word is: {{ the_word }} <br>
 
     Word 1: <textarea rows="1" cols="30" name="word1"></textarea><br>
     Word 2: <textarea rows="1" cols="30" name="word2"></textarea><br>

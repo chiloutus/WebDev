@@ -3,7 +3,7 @@
 {% block the_body %}
 
 <p>
-You did a great job!
+You did a great job! You took: {{ game_time }} to complete the game!
 </p>
 <table style="width:100%">
     <tr>
@@ -39,7 +39,7 @@ You did a great job!
         <td>{{correctWords[6]}}</td>
     </tr>
 </table>
-
-Go <a href={{home_link}}>Home</a>
+<a href={{game_link}}>Play Again?</a>
+or Go <a href={{home_link}}>Home</a>
 
 {% endblock %}
