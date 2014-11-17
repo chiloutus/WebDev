@@ -67,33 +67,32 @@ def get_random_line():
 	file.seek(random_point)
 	file.readline() # skip this line to clear the partial line
 	return file.readline()#variables
+def isAWord(word):
+    return '\n' + word + '\n' in open("shortWords.txt").read()
+def hasTooManyLetters(word,source,i):
+    source.count(i) < word.count(i)
 
+def isInSource(word,source):
+    count = len(word)
+    for i in word:
+        if i in source:
+            if not hasTooManyLetters(word,source,i):
+                print("Your i is in sourceWord")
+                count -= 1
+    if(count == 0):
+        return True
+    else:
+        return False
 def checkWords(sourceWord,words):
-	shortWord = open("shortWords.txt", "r")
-	count = 0
-	
-	correctWords = []
-	print(sourceWord)
-	print(words)
-	print("Count started at:" +  str(count))
-	for usrin in words:
-		print(usrin)
-		if len(usrin) != 0:
-			count = len(usrin)
-			print(count)
-			if usrin + '\n' in shortWord:
-				print("I'm in shortWord")
-				for i in usrin:
-					print("I am your i!" + i)
-					if i in sourceWord:
-						if sourceWord.count(i) >= usrin.count(i):
-							print("Your i is in sourceWord")
-							count -= 1
-			if count == 0:
-				correctWords.append(usrin)
-				print(usrin + sourceWord)
-				print(count)		
-	return correctWords
+        correctWords = []
+        for usrin in words:
+            if len(usrin) != 0:
+                if isAWord(usrin) and usrin != sourceWord:
+                    if isInSource():
+                        correctWords.append(True)
+                    else:
+                        correctWords.append(False)
+        return correctWords
 
 @app.route('/gameresults', methods=["POST"])
 def savegamedata():
@@ -109,7 +108,14 @@ def savegamedata():
 	correctWords = checkWords(request.form['sourceWord'],words)
 	if len(correctWords) > 1:
 		return render_template("gameresult.html",
-						 the_title=words[1],
+						 word1=request.form["word1"],
+						 word2=request.form["word2"],
+						 word3=request.form["word3"],
+						 word4=request.form["word4"],
+						 word5=request.form["word5"],
+						 word6=request.form["word6"],
+						 word7=request.form["word7"],
+                         correctWords = correctWords,
 						 home_link=url_for("display_home"), )
 	else:
 		return redirect(url_for("getacomment"))
