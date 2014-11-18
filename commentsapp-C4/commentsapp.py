@@ -140,6 +140,7 @@ def nice_timedelta_str(d):
     result = str(d)
     if result[1] == ':':
         result = '0' + result
+    result = result.split('.', 1)[0]
     return result
 
 
