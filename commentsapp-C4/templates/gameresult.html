@@ -1,7 +1,26 @@
 {% extends "base.html" %}
 
 {% block the_body %}
+<script>
+        function goBack() {
+            window.history.back()
+        }
+        function goForward() {
+            boolean allOk = true
+            list = {{ correctWords }};
+            for(int i = 1; i < list.length;i++)
+            {
+              if(!{{ correctWords }}[i].equals("✔")){
+                  allOk = false;
+              }
+            }
+            if(allOk){
+                document.getElementsById("continueButton").disabled = false
+            }
 
+        }
+        document.getElementsById("continueButton").disabled = true
+</script>
 <p>
 You did a great job! You took: {{ game_time }} to complete the game!
 </p>
@@ -12,34 +31,37 @@ You did a great job! You took: {{ game_time }} to complete the game!
     </tr>
     <tr>
         <td>{{word1}}</td>
-        <td>{{correctWords[0]}}</td>
+        <td id="word1">{{correctWords[0]}}</td>
     </tr>
     <tr>
         <td>{{word2}}</td>
-        <td>{{correctWords[1]}}</td>
+        <td id="word2">{{correctWords[1]}}</td>
     </tr>
     <tr>
         <td>{{word3}}</td>
-        <td>{{correctWords[2]}}</td>
+        <td id="word3">{{correctWords[2]}}</td>
     </tr>
     <tr>
         <td>{{word4}}</td>
-        <td>{{correctWords[3]}}</td>
+        <td id="word4">{{correctWords[3]}}</td>
     </tr>
     <tr>
         <td>{{word5}}</td>
-        <td>{{correctWords[4]}}</td>
+        <td id="word5">{{correctWords[4]}}</td>
     </tr>
     <tr>
         <td>{{word6}}</td>
-        <td>{{correctWords[5]}}</td>
+        <td id="word6">{{correctWords[5]}}</td>
     </tr>
     <tr>
         <td>{{word7}}</td>
-        <td>{{correctWords[6]}}</td>
+        <td id="word7">{{correctWords[6]}}</td>
     </tr>
 </table>
+ <button onclick="goBack()">Edit Words</button>
+ <button onclick="location.href={{ home_link }}" id="continueButton">Submit</button><br>
+
+
 <a href={{game_link}}>Play Again?</a>
 or Go <a href={{home_link}}>Home</a>
-
 {% endblock %}

@@ -77,14 +77,13 @@ def get_random_line():
 def isAWord(word):
     return '\n' + word + '\n' in open("shortWords.txt").read()
 def hasTooManyLetters(word,source,i):
-    source.count(i) < word.count(i)
+    return source.count(i) < word.count(i)
 
 def isInSource(word,source):
     count = len(word)
     for i in word:
         if i in source:
             if not hasTooManyLetters(word,source,i):
-                print("Your i is in sourceWord")
                 count -= 1
     if(count == 0):
         return True
@@ -92,18 +91,21 @@ def isInSource(word,source):
         return False
 def checkWords(words):
         correctWords = []
-        sourceWord = session['randomWord']
+        sourceWord = session['randomWord'].lower()
         for usrin in words:
             if len(usrin) != 0:
-                if isAWord(usrin) and usrin != sourceWord:
-                    if isInSource(usrin,sourceWord):
-                        correctWords.append(True)
+                if isAWord(usrin):
+                    if usrin + '\n' != sourceWord:
+                        if isInSource(usrin,sourceWord):
+                            correctWords.append("✔")
+                        else:
+                            correctWords.append("This cannot be made from the original word!")
                     else:
-                        correctWords.append(False)
+                        correctWords.append("This is the same as the original word!")
                 else:
-                    correctWords.append(False)
+                    correctWords.append("This is not a word")
             else:
-                correctWords.append(False)
+                correctWords.append("This word is blank")
         return correctWords
 
 @app.route('/gameresults', methods=["POST"])
