@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block the_body %}
+<script>
+function boolFormat(cond){
+	if(cond){
+		return "The word is correct!"
+	}
+	else{
+		return "Sorry, the word was incorrect!"
+	}
+}
+</script>
+<p>
+You did a great job! You took: {{ game_time }} to complete the game!
+</p>
+<table style="width:100%">
+    <tr>
+        <td>Word</td>
+        <td>Result</td>
+    </tr>
+    <tr>
+        <td>{{word1}}</td>
+	<td>boolFormat({{correctWords[0]}})</td>
+    </tr>
+    <tr>
+        <td>{{word2}}</td>
+        <td>{{correctWords[1]}}</td>
+    </tr>
+    <tr>
+        <td>{{word3}}</td>
+        <td>{{correctWords[2]}}</td>
+    </tr>
+    <tr>
+        <td>{{word4}}</td>
+        <td>{{correctWords[3]}}</td>
+    </tr>
+    <tr>
+        <td>{{word5}}</td>
+        <td>{{correctWords[4]}}</td>
+    </tr>
+    <tr>
+        <td>{{word6}}</td>
+        <td>{{correctWords[5]}}</td>
+    </tr>
+    <tr>
+        <td>{{word7}}</td>
+        <td>{{correctWords[6]}}</td>
+    </tr>
+</table>
+<a href={{game_link}}>Play Again?</a>
+or Go <a href={{home_link}}>Home</a>
+
+{% endblock %}

@@ -3,23 +3,25 @@
 {% block the_body %}
 <script>
         function goBack() {
-            window.history.back()
+            window.history.back();
         }
         function goForward() {
-            boolean allOk = true
-            list = {{ correctWords }};
-            for(int i = 1; i < list.length;i++)
+            var allOk = true
+            var i
+            var list = { document.getElementById("word1") , document.getElementById("word2") , document.getElementById("word4"),document.getElementById("word5"),document.getElementById("word6"),document.getElementById("word7") }
+            for(i = 1; i < list.length;i++)
             {
-              if(!{{ correctWords }}[i].equals("✔")){
+              if(!list[i].isEqual("✔")){
                   allOk = false;
               }
             }
             if(allOk){
-                document.getElementsById("continueButton").disabled = false
+                document.getElementsById("continueButton").disabled = false;
             }
 
         }
-        document.getElementsById("continueButton").disabled = true
+        document.getElementsById("continueButton").disabled = true;
+        goForward();
 </script>
 <p>
 You did a great job! You took: {{ game_time }} to complete the game!
@@ -60,6 +62,7 @@ You did a great job! You took: {{ game_time }} to complete the game!
 </table>
  <button onclick="goBack()">Edit Words</button>
  <button onclick="location.href={{ home_link }}" id="continueButton">Submit</button><br>
+    <a href={{score_link}}>Play Again?</a>
 
 
 <a href={{game_link}}>Play Again?</a>
