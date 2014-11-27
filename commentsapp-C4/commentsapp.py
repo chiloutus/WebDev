@@ -80,13 +80,15 @@ def update_highscores(name, score ):
     with open('highscores.log', 'r+') as log:
         lines = log.readlines()
         for x in lines:
-            lengthOfName = len(x) - 9
+            lengthOfName = len(x) - 10
             scores.append([x[:lengthOfName], x[lengthOfName:].strip()])
             print(scores)
 
         scores.sort(key=lambda x: x[1])
         print(scores)
         log.truncate(0)
+
+    with open('highscores.log','w') as log:
         for line in scores:
             print(line)
             log.write(line[0] +" " +  line[1] + "\n")
