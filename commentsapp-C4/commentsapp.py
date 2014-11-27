@@ -1,7 +1,6 @@
-
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, url_for, request, redirect, flash, session
 import time,random,os,datetime
-from natsort import versorted
 from threading import Thread
 
 app = Flask(__name__)
@@ -60,28 +59,44 @@ def showallcomments():
 @app.route('/highscores')
 def showallscores():
     update_highscores(session['the_name'], session['formattedTime'] )
+    leaderboard_pos=getLeaderBoardPos(session['formattedTime'])
+
     with open('highscores.log') as log:
         lines = log.readlines()
         return render_template("show.html",
                                the_title="Here are the results to date",
                                the_data=lines[:10],
-                               home_link=url_for("display_home"))
+                               the_pos=leaderboard_pos,
+                               home_link=url_for("display_home")
+                                )
 
 def update_highscores(name, score ):
     scores = []
     high_score = [name,score]
+    print(high_score)
     scores.append(high_score)
+    print(scores)
+
     with open('highscores.log', 'r+') as log:
         lines = log.readlines()
         for x in lines:
-            scores.append(x.split())
-            print(lines)
-        print(scores)
+            lengthOfName = len(x) - 9
+            scores.append([x[:lengthOfName], x[lengthOfName:].strip()])
+            print(scores)
+
         scores.sort(key=lambda x: x[1])
+        print(scores)
         log.truncate(0)
         for line in scores:
             print(line)
-            log.write(line[0] + " " + line[1] + "\n")
+            log.write(line[0] +" " +  line[1] + "\n")
+
+
+def getLeaderBoardPos(time):
+    with open("highscores.log") as log:
+        for i, line in enumerate(log, 1):
+            if time in line:
+                return i
 
 
 @app.route('/wordgame')
@@ -119,15 +134,21 @@ def isInSource(word,source):
         return True
     else:
         return False
+
 def checkWords(words):
         correctWords = []
+        usedwords = []
         sourceWord = session['randomWord'].lower()
         for usrin in words:
             if len(usrin) != 0:
                 if isAWord(usrin):
                     if usrin + '\n' != sourceWord:
                         if isInSource(usrin,sourceWord):
-                            correctWords.append("✔")
+                            if usrin not in usedwords:
+                                usedwords.append(usrin)
+                                correctWords.append("✔")
+                            else:
+                                correctWords.append("You can't use the same word twice!")
                         else:
                             correctWords.append("This cannot be made from the original word!")
                     else:
@@ -143,18 +164,14 @@ def checkWords(words):
 def savegamedata():
     print("HI")
     session['endTime'] = getTimeStamp()
-
     totalTime = timeDifference()
     session['formattedTime'] = nice_timedelta_str(totalTime)
     words = [request.form['word1'],request.form['word2'],request.form['word3'],request.form['word4']
         ,request.form['word5'],request.form['word6'],request.form['word7']]
-
-    name = request.form["the_name"]
     session['the_name'] = request.form['the_name']
     session['correctWords'] = words
     correctWords = checkWords(words)
-    if len(correctWords) > 1:
-        return render_template("gameresult.html",
+    return render_template("gameresult.html",
 						 word1=request.form["word1"],
 						 word2=request.form["word2"],
 						 word3=request.form["word3"],
@@ -168,8 +185,12 @@ def savegamedata():
                          score_link=url_for("showallscores"),
                          game_time= session['formattedTime'],
                          the_name=request.form["the_name"])
-    else:
-        return redirect(url_for("getacomment"))
+
+
+
+
+
+
 
 def timeDifference():
     return session['endTime'] - session['startTime']

@@ -1,15 +1,18 @@
 {% extends "base.html" %}
 
 {% block the_body %}
-
+<pr> You were {{ the_pos }} on the leaderboard!</pr>
+ <table>
 {% for line in the_data %}
 
-<p>
-{{ line }}
-</p>
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ line }}</td>
+        </tr>
+
 
 {% endfor %}
-
+ </table>>
 Go <a href={{home_link}}>Home</a>
 
 {% endblock %}

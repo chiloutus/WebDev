@@ -5,23 +5,7 @@
         function goBack() {
             window.history.back();
         }
-        function goForward() {
-            var allOk = true
-            var i
-            var list = { document.getElementById("word1") , document.getElementById("word2") , document.getElementById("word4"),document.getElementById("word5"),document.getElementById("word6"),document.getElementById("word7") }
-            for(i = 1; i < list.length;i++)
-            {
-              if(!list[i].isEqual("✔")){
-                  allOk = false;
-              }
-            }
-            if(allOk){
-                document.getElementsById("continueButton").disabled = false;
-            }
 
-        }
-        document.getElementsById("continueButton").disabled = true;
-        goForward();
 </script>
 <p>
 You did a great job! You took: {{ game_time }} to complete the game!
@@ -61,10 +45,15 @@ You did a great job! You took: {{ game_time }} to complete the game!
     </tr>
 </table>
  <button onclick="goBack()">Edit Words</button>
- <button onclick="location.href={{ home_link }}" id="continueButton">Submit</button><br>
-    <a href={{score_link}}>Play Again?</a>
+    <a href={{ score_link }}>
+        <input type="button" value="Submit Score" id="continueButton"/>
+    </a>
 
+    {% for result in correctWords if result != "✔" %}
+        <script>document.getElementById("continueButton").disabled = true; </script>
+        I'm here!
 
+    {% endfor %}
 <a href={{game_link}}>Play Again?</a>
 or Go <a href={{home_link}}>Home</a>
 {% endblock %}
